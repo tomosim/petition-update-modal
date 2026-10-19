@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { z } from "zod";
 
-export default function PetitionUpdateForm() {
+export default function PetitionUpdateForm({ onClose }: { onClose: () => void }) {
     const UpdatePetitionSchema = z.object({
         title: z.string().nonempty("Title is required").max(100, "Title must be at most 100 characters"),
         newUpdate: z.string().nonempty("Please write a few words about your update.").max(10000, "Update must be at most 10,000 characters"),
@@ -65,9 +65,9 @@ export default function PetitionUpdateForm() {
             <label htmlFor="author">Author</label>
             <input id="author" name="author" type="text" value={formData.author} onChange={handleInputChange} readOnly={!isAuthorEditable} />
 
+            <button onClick={onClose}>Cancel</button>
             <button type="button" onClick={handleSaveData}>Save Data</button>
-            <button type="submit" >Submit</button>
-
+            <button type="submit" >Publish Update</button>
         </form>
     );
 }

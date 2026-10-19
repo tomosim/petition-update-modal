@@ -12,7 +12,7 @@ function App() {
       <button className={styles.toggleModal} onClick={() => setIsModalOpen(true)}>
         Update Petition
       </button>
-      {isModalOpen && <Modal onClose={() => setIsModalOpen(false)} children={<PetitionUpdateForm />} />}
+      {isModalOpen && <Modal onClose={() => setIsModalOpen(false)} children={<PetitionUpdateForm onClose={() => setIsModalOpen(false)} />} />}
     </main>
   )
 }
