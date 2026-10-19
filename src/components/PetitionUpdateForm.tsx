@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { z } from "zod";
 
 export default function PetitionUpdateForm() {
@@ -15,6 +15,14 @@ export default function PetitionUpdateForm() {
         author: 'Petra Petitionstarterin',
     });
     const [isAuthorEditable, setIsAuthorEditable] = React.useState(false);
+
+    useEffect(() => {
+        const savedData = localStorage.getItem("formData");
+        if (savedData) {
+            setFormData(JSON.parse(savedData));
+        }
+
+    }, []);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -33,6 +41,10 @@ export default function PetitionUpdateForm() {
         }
         console.log("Form submitted successfully:", result.data);
     };
+
+    const handleSaveData = () => {
+        localStorage.setItem("formData", JSON.stringify(formData));
+    }
 
     return (
         <form style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: 16 }} onSubmit={handleSubmit}>
@@ -53,7 +65,9 @@ export default function PetitionUpdateForm() {
             <label htmlFor="author">Author</label>
             <input id="author" name="author" type="text" value={formData.author} onChange={handleInputChange} readOnly={!isAuthorEditable} />
 
+            <button type="button" onClick={handleSaveData}>Save Data</button>
             <button type="submit" >Submit</button>
+
         </form>
     );
 }
