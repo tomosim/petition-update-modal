@@ -52,7 +52,12 @@ export default function PetitionUpdateForm({ onClose, title }: { onClose: () => 
             await mockUpdatePetition(formData);
             setIsSuccess(true);
         } catch (error) {
-            setIsError(true);
+            if (error instanceof Response) {
+                setServerError(`Server error: ${error.status} ${error.statusText}`);
+            }
+            else {
+                setServerError("An unexpected error occurred.");
+            }
         } finally {
             setIsLoading(false);
         }
