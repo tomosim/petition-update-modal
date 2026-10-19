@@ -98,6 +98,8 @@ export default function PetitionUpdateForm({ onClose, title }: { onClose: () => 
                         onChange={handleInputChange}
                         required
                         error={errors.title}
+                        charCount={formData.title.length}
+                        charLimit={100}
                     />
 
                     <Input
@@ -109,6 +111,8 @@ export default function PetitionUpdateForm({ onClose, title }: { onClose: () => 
                         onChange={handleInputChange}
                         required
                         error={errors.newUpdate}
+                        charCount={formData.newUpdate.length}
+                        charLimit={10000}
                     />
                     <label htmlFor="author-edit">Edit author</label>
                     <input

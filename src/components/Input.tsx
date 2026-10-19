@@ -12,6 +12,8 @@ type CommonProps = {
     labelClassName?: string;
     errorClassName?: string;
     'aria-describedby'?: string;
+    charCount?: number;
+    charLimit?: number;
 };
 
 type InputProps = CommonProps & (
@@ -34,6 +36,8 @@ export default function Input(props: InputProps) {
         labelClassName,
         errorClassName,
         'aria-describedby': describedBy,
+        charCount,
+        charLimit,
         ...nativeProps
     } = props;
 
@@ -41,6 +45,7 @@ export default function Input(props: InputProps) {
     const ariaDescribedBy = [describedBy, error ? errorId : undefined]
         .filter(Boolean)
         .join(' ') || undefined;
+    const charLimitExceeded = charLimit !== undefined && charCount !== undefined && charCount > charLimit;
 
     return (
         <div className={wrapperClassName} style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
@@ -64,6 +69,10 @@ export default function Input(props: InputProps) {
                     aria-invalid={error ? true : undefined}
                     aria-describedby={ariaDescribedBy}
                 />
+            )}
+
+            {charLimit && (
+                <p style={{ color: charLimitExceeded ? 'red' : 'inherit' }}> {charCount}/{charLimit}</p>
             )}
 
             {error && (
