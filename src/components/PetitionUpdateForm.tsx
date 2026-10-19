@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { z } from "zod";
 import { mockUpdatePetition } from "../api/mocks";
 
@@ -10,15 +10,23 @@ const UpdatePetitionSchema = z.object({
 export type UpdatePetitionInput = z.infer<typeof UpdatePetitionSchema>;
 
 export default function PetitionUpdateForm({ onClose }: { onClose: () => void }) {
-    const [formData, setFormData] = React.useState<UpdatePetitionInput>({
+    const [formData, setFormData] = useState<UpdatePetitionInput>({
         title: '',
         newUpdate: '',
         author: 'Petra Petitionstarterin',
     });
-    const [isAuthorEditable, setIsAuthorEditable] = React.useState(false);
-    const [isLoading, setIsLoading] = React.useState(false);
-    const [isSuccess, setIsSuccess] = React.useState(false);
-    const [isError, setIsError] = React.useState(false);
+    const [isAuthorEditable, setIsAuthorEditable] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isSuccess, setIsSuccess] = useState(false);
+    const [isError, setIsError] = useState(false);
+    const [errors, setErrors] = useState<{ [key in "title" | "newUpdate" | "author"]: string }>({ title: "", newUpdate: "", author: "" });
+
+    useEffect(() => {
+        const firstInvalidField = (['title', 'newUpdate', 'author'] as const).find((field) => errors[field]);
+        if (firstInvalidField) {
+            document.getElementById(firstInvalidField)?.focus();
+        }
+    }, [errors]);
 
     useEffect(() => {
         const savedData = localStorage.getItem("formData");
@@ -41,7 +49,12 @@ export default function PetitionUpdateForm({ onClose }: { onClose: () => void })
         e.preventDefault();
         const result = UpdatePetitionSchema.safeParse(formData);
         if (!result.success) {
-            console.error(result.error.format());
+            const treeifiedError = z.treeifyError(result.error);
+            setErrors({
+                title: treeifiedError.properties?.title?.errors[0] || "",
+                newUpdate: treeifiedError.properties?.newUpdate?.errors[0] || "",
+                author: treeifiedError.properties?.author?.errors[0] || "",
+            });
             return;
         }
         try {
@@ -70,9 +83,11 @@ export default function PetitionUpdateForm({ onClose }: { onClose: () => void })
             <form style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: 16 }} onSubmit={handleSubmit}>
                 <label htmlFor="title">Title</label>
                 <input id="title" name="title" type="text" value={formData.title} onChange={handleInputChange} />
+                {errors.title && <p style={{ color: 'red' }}>{errors.title}</p>}
 
-                <label htmlFor="new-update">New update</label>
-                <textarea id="new-update" name="newUpdate" value={formData.newUpdate} onChange={handleInputChange} />
+                <label htmlFor="newUpdate">New update</label>
+                <textarea id="newUpdate" name="newUpdate" value={formData.newUpdate} onChange={handleInputChange} />
+                {errors.newUpdate && <p style={{ color: 'red' }}>{errors.newUpdate}</p>}
 
                 <label htmlFor="author-edit">Edit author</label>
                 <input
@@ -84,6 +99,7 @@ export default function PetitionUpdateForm({ onClose }: { onClose: () => void })
 
                 <label htmlFor="author">Author</label>
                 <input id="author" name="author" type="text" value={formData.author} onChange={handleInputChange} readOnly={!isAuthorEditable} />
+                {errors.author && <p style={{ color: 'red' }}>{errors.author}</p>}
 
                 <button onClick={onClose}>Cancel</button>
                 <button type="button" onClick={handleSaveData}>Save Data</button>
