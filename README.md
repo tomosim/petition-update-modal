@@ -1,75 +1,31 @@
-# React + TypeScript + Vite
+# update petition form
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
 
-Currently, two official plugins are available:
+This is a small React project created with Vite and typescript that contains a Modal Form component for updating a petition on a platform similar to innn.it. It was build with a focus on a11y and good UI/UX. Enjoy!
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Installation
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+To run, please clone the repo, navigate into the directory, install using `npm`, and then run!
 
 ```
+git clone https://github.com/tomosim/petition-update-modal.git
+cd petition-update-modal
+npm install
+npm run dev
+```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+to run the tests, simply run the command
 
 ```
+npm run test
+```
+## Notes
+
+ - I chose Vite here over Next.js as this project didn't need routing or server side rendering. 
+ - Vite also allows for tests to be setup simply with Vitest and React Testing Library.
+ - For styling I chose CSS modules for the zero setup and better dev experience in smaller projects. Another option could have been a CSS in JS solution like Emotion, as it is in your tech stack, but it felt over kill for a small feature. 
+ - There is no localisation on innn.it as far as I am aware, so in the interest of time I somply hardcoded strings for now, but in the future it would be possible to use a lib like `react-i18next` to handle tranlations. It's definitely a nice TODO for this project.
+ - If I had had time I would have liked to have created a storybook story for the flexible Input component.
+ - I added unit tests for some pure functions, but I would have liked to have setup cypress to run some integration tests, especially to cover errors and loading states.
+
