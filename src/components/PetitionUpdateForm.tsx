@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { z } from "zod";
 import { mockUpdatePetition } from "../api/mocks";
+import Input from "./Input";
 
 const UpdatePetitionSchema = z.object({
     title: z.string().nonempty("Title is required").max(100, "Title must be at most 100 characters"),
@@ -87,15 +88,28 @@ export default function PetitionUpdateForm({ onClose, title }: { onClose: () => 
                         &times;
                     </button>
                 </header>
-                <form style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: 16 }} onSubmit={handleSubmit}>
-                    <label htmlFor="title">Title</label>
-                    <input id="title" name="title" type="text" value={formData.title} onChange={handleInputChange} />
-                    {errors.title && <p style={{ color: 'red' }}>{errors.title}</p>}
+                <form noValidate style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: 16 }} onSubmit={handleSubmit}>
 
-                    <label htmlFor="newUpdate">New update</label>
-                    <textarea id="newUpdate" name="newUpdate" value={formData.newUpdate} onChange={handleInputChange} />
-                    {errors.newUpdate && <p style={{ color: 'red' }}>{errors.newUpdate}</p>}
+                    <Input
+                        id="title"
+                        name="title"
+                        label="Title"
+                        value={formData.title}
+                        onChange={handleInputChange}
+                        required
+                        error={errors.title}
+                    />
 
+                    <Input
+                        as="textarea"
+                        id="newUpdate"
+                        name="newUpdate"
+                        label="New update"
+                        value={formData.newUpdate}
+                        onChange={handleInputChange}
+                        required
+                        error={errors.newUpdate}
+                    />
                     <label htmlFor="author-edit">Edit author</label>
                     <input
                         type="checkbox"
@@ -103,13 +117,23 @@ export default function PetitionUpdateForm({ onClose, title }: { onClose: () => 
                         checked={isAuthorEditable}
                         onChange={(e) => setIsAuthorEditable(e.target.checked)}
                     />
+                    <Input
+                        id="author"
+                        name="author"
+                        label="Author"
+                        value={formData.author}
+                        onChange={handleInputChange}
+                        readOnly={!isAuthorEditable}
+                        required
+                        error={errors.author}
+                    />
 
-                    <label htmlFor="author">Author</label>
-                    <input id="author" name="author" type="text" value={formData.author} onChange={handleInputChange} readOnly={!isAuthorEditable} />
-                    {errors.author && <p style={{ color: 'red' }}>{errors.author}</p>}
-
-                    <button onClick={onClose}>Cancel</button>
-                    <button type="button" onClick={handleSaveData}>Save Data</button>
+                    <button type="button" onClick={onClose}>
+                        Cancel
+                    </button>
+                    <button type="button" onClick={handleSaveData}>
+                        Save Data
+                    </button>
                     <button type="submit" disabled={isLoading}>
                         {isLoading ? "Publishing..." : "Publish Update"}
                     </button>
