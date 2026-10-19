@@ -2,6 +2,7 @@ import type {
     InputHTMLAttributes,
     TextareaHTMLAttributes,
 } from 'react';
+import styles from './Input.module.css';
 
 type CommonProps = {
     id: string;
@@ -46,9 +47,10 @@ export default function Input(props: InputProps) {
         .filter(Boolean)
         .join(' ') || undefined;
     const charLimitExceeded = charLimit !== undefined && charCount !== undefined && charCount > charLimit;
+    const wrapperClasses = [styles.wrapper, wrapperClassName].filter(Boolean).join(' ');
 
     return (
-        <div className={wrapperClassName} style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'space-between', gap: 6, gridColumnStart: 1, gridColumnEnd: 3 }}>
+        <div className={wrapperClasses}>
             <label htmlFor={id} className={labelClassName}>
                 {label}
             </label>
@@ -57,28 +59,28 @@ export default function Input(props: InputProps) {
                 <textarea
                     {...(nativeProps as TextareaHTMLAttributes<HTMLTextAreaElement>)}
                     id={id}
-                    className={className}
+                    className={[styles.input, styles.textarea, className].filter(Boolean).join(' ')}
                     aria-invalid={error ? true : undefined}
                     aria-describedby={ariaDescribedBy}
-                    style={{ minHeight: 100, width: '-moz-available', padding: 8 }}
                 />
             ) : (
                 <input
                     {...(nativeProps as InputHTMLAttributes<HTMLInputElement>)}
                     id={id}
-                    className={className}
+                    className={[styles.input, className].filter(Boolean).join(' ')}
                     aria-invalid={error ? true : undefined}
                     aria-describedby={ariaDescribedBy}
-                    style={{ width: '-moz-available', padding: 8 }}
                 />
             )}
 
             {charLimit && (
-                <p style={{ color: charLimitExceeded ? 'red' : 'inherit' }}> {charCount}/{charLimit} Zeichen</p>
+                <p className={[styles.charLimit, charLimitExceeded ? styles.charLimitExceeded : undefined].filter(Boolean).join(' ')}>
+                    {charCount}/{charLimit} Zeichen
+                </p>
             )}
 
             {error && (
-                <p id={errorId} className={errorClassName} role="alert" style={{ color: 'red', margin: 0 }}>
+                <p id={errorId} className={[styles.error, errorClassName].filter(Boolean).join(' ')} role="alert">
                     {error}
                 </p>
             )}

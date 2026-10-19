@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { z } from "zod";
 import { mockUpdatePetition } from "../api/mocks";
 import Input from "./Input";
+import styles from "./PetitionUpdateForm.module.css";
 
 const UpdatePetitionSchema = z.object({
     title: z.string().nonempty("Title is required").max(100, "Title must be at most 100 characters"),
@@ -75,20 +76,20 @@ export default function PetitionUpdateForm({ onClose, title }: { onClose: () => 
 
     return (
         isSuccess ? (
-            <div style={{ padding: 16 }} role="status">
+            <div className={styles.success} role="status">
                 <h2>Update Published!</h2>
                 <p>Your petition update has been successfully published.</p>
                 <button onClick={onClose}>Close</button>
             </div>
         ) : (
             <>
-                <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 16 }}>
+                <header className={styles.header}>
                     <h2 id="update-petition-title">{title}</h2>
-                    <button onClick={onClose} aria-label="Close modal" style={{ border: 'none', background: 'none', fontSize: '24px', cursor: 'pointer' }}>
+                    <button className={styles.closeButton} onClick={onClose} aria-label="Close modal">
                         &times;
                     </button>
                 </header>
-                <form noValidate style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: 16 }} onSubmit={handleSubmit}>
+                <form noValidate className={styles.form} onSubmit={handleSubmit}>
 
                     <Input
                         id="title"
@@ -116,9 +117,9 @@ export default function PetitionUpdateForm({ onClose, title }: { onClose: () => 
                         charLimit={10000}
                     />
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', alignItems: 'center', gap: 8 }}>
+                    <div className={styles.authorSection}>
                         <h3>Absender</h3>
-                        <span style={{ justifySelf: 'end' }}>
+                        <span className={styles.authorEdit}>
                             <input
                                 type="checkbox"
                                 id="author-edit"
@@ -139,19 +140,19 @@ export default function PetitionUpdateForm({ onClose, title }: { onClose: () => 
                         />
                     </div>
 
-                    <span style={{ display: 'flex', justifyContent: 'space-around', gap: 8 }}>
+                    <span className={styles.actionButtons}>
 
-                        <button type="button" onClick={onClose} style={{ backgroundColor: 'transparent', border: '1px solid #C9B2F9', borderRadius: 24, height: 48, fontSize: 18, padding: '0 16px', cursor: 'pointer' }}>
+                        <button type="button" className={styles.cancelButton} onClick={onClose}>
                             Abbrechnung
                         </button>
-                        <button type="button" onClick={handleSaveData} style={{ backgroundColor: '#C9B2F9', border: '1px solid black', borderRadius: 24, height: 48, fontSize: 18, padding: '0 16px', cursor: 'pointer' }}>
+                        <button type="button" className={styles.saveButton} onClick={handleSaveData}>
                             Save Data
                         </button>
-                        <button type="submit" disabled={isLoading} style={{ backgroundColor: '#F87535', border: '1px solid black', borderRadius: 24, height: 48, fontSize: 18, padding: '0 16px', cursor: isLoading ? 'not-allowed' : 'pointer', color: 'white' }}>
+                        <button type="submit" className={styles.publishButton} disabled={isLoading}>
                             {isLoading ? "Publishing..." : "Publish Update"}
                         </button>
                     </span>
-                    {isError && <p style={{ color: 'red' }}>An error occurred while publishing the update. Please try again.</p>}
+                    {isError && <p className={styles.errorMessage}>An error occurred while publishing the update. Please try again.</p>}
                 </form >
             </>
         )
