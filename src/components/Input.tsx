@@ -48,7 +48,7 @@ export default function Input(props: InputProps) {
     const charLimitExceeded = charLimit !== undefined && charCount !== undefined && charCount > charLimit;
 
     return (
-        <div className={wrapperClassName} style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+        <div className={wrapperClassName} style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'space-between', gap: 6, gridColumnStart: 1, gridColumnEnd: 3 }}>
             <label htmlFor={id} className={labelClassName}>
                 {label}
             </label>
@@ -60,6 +60,7 @@ export default function Input(props: InputProps) {
                     className={className}
                     aria-invalid={error ? true : undefined}
                     aria-describedby={ariaDescribedBy}
+                    style={{ minHeight: 100, width: '-moz-available', padding: 8 }}
                 />
             ) : (
                 <input
@@ -68,11 +69,12 @@ export default function Input(props: InputProps) {
                     className={className}
                     aria-invalid={error ? true : undefined}
                     aria-describedby={ariaDescribedBy}
+                    style={{ width: '-moz-available', padding: 8 }}
                 />
             )}
 
             {charLimit && (
-                <p style={{ color: charLimitExceeded ? 'red' : 'inherit' }}> {charCount}/{charLimit}</p>
+                <p style={{ color: charLimitExceeded ? 'red' : 'inherit' }}> {charCount}/{charLimit} Zeichen</p>
             )}
 
             {error && (

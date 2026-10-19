@@ -75,7 +75,7 @@ export default function PetitionUpdateForm({ onClose, title }: { onClose: () => 
 
     return (
         isSuccess ? (
-            <div style={{ padding: 16 }}>
+            <div style={{ padding: 16 }} role="status">
                 <h2>Update Published!</h2>
                 <p>Your petition update has been successfully published.</p>
                 <button onClick={onClose}>Close</button>
@@ -93,7 +93,7 @@ export default function PetitionUpdateForm({ onClose, title }: { onClose: () => 
                     <Input
                         id="title"
                         name="title"
-                        label="Title"
+                        label="Titel"
                         value={formData.title}
                         onChange={handleInputChange}
                         required
@@ -106,7 +106,8 @@ export default function PetitionUpdateForm({ onClose, title }: { onClose: () => 
                         as="textarea"
                         id="newUpdate"
                         name="newUpdate"
-                        label="New update"
+                        label="Deine Neuigkeiten"
+                        placeholder="Bitte schreibe ein paar Worte zu deinem Update."
                         value={formData.newUpdate}
                         onChange={handleInputChange}
                         required
@@ -114,35 +115,44 @@ export default function PetitionUpdateForm({ onClose, title }: { onClose: () => 
                         charCount={formData.newUpdate.length}
                         charLimit={10000}
                     />
-                    <label htmlFor="author-edit">Edit author</label>
-                    <input
-                        type="checkbox"
-                        id="author-edit"
-                        checked={isAuthorEditable}
-                        onChange={(e) => setIsAuthorEditable(e.target.checked)}
-                    />
-                    <Input
-                        id="author"
-                        name="author"
-                        label="Author"
-                        value={formData.author}
-                        onChange={handleInputChange}
-                        readOnly={!isAuthorEditable}
-                        required
-                        error={errors.author}
-                    />
 
-                    <button type="button" onClick={onClose}>
-                        Cancel
-                    </button>
-                    <button type="button" onClick={handleSaveData}>
-                        Save Data
-                    </button>
-                    <button type="submit" disabled={isLoading}>
-                        {isLoading ? "Publishing..." : "Publish Update"}
-                    </button>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', alignItems: 'center', gap: 8 }}>
+                        <h3>Absender</h3>
+                        <span style={{ justifySelf: 'end' }}>
+                            <input
+                                type="checkbox"
+                                id="author-edit"
+                                checked={isAuthorEditable}
+                                onChange={(e) => setIsAuthorEditable(e.target.checked)}
+                            />
+                            <label htmlFor="author-edit">Edit author</label>
+                        </span>
+                        <Input
+                            id="author"
+                            name="author"
+                            label="Absender"
+                            value={formData.author}
+                            onChange={handleInputChange}
+                            readOnly={!isAuthorEditable}
+                            required
+                            error={errors.author}
+                        />
+                    </div>
+
+                    <span style={{ display: 'flex', justifyContent: 'space-around', gap: 8 }}>
+
+                        <button type="button" onClick={onClose} style={{ backgroundColor: 'transparent', border: '1px solid #C9B2F9', borderRadius: 24, height: 48, fontSize: 18, padding: '0 16px', cursor: 'pointer' }}>
+                            Abbrechnung
+                        </button>
+                        <button type="button" onClick={handleSaveData} style={{ backgroundColor: '#C9B2F9', border: '1px solid black', borderRadius: 24, height: 48, fontSize: 18, padding: '0 16px', cursor: 'pointer' }}>
+                            Save Data
+                        </button>
+                        <button type="submit" disabled={isLoading} style={{ backgroundColor: '#F87535', border: '1px solid black', borderRadius: 24, height: 48, fontSize: 18, padding: '0 16px', cursor: isLoading ? 'not-allowed' : 'pointer', color: 'white' }}>
+                            {isLoading ? "Publishing..." : "Publish Update"}
+                        </button>
+                    </span>
                     {isError && <p style={{ color: 'red' }}>An error occurred while publishing the update. Please try again.</p>}
-                </form>
+                </form >
             </>
         )
     );
