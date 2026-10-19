@@ -28,4 +28,4 @@ npm run test
  - There is no localisation on innn.it as far as I am aware, so in the interest of time I somply hardcoded strings for now, but in the future it would be possible to use a lib like `react-i18next` to handle tranlations. It's definitely a nice TODO for this project.
  - If I had had time I would have liked to have created a storybook story for the flexible Input component.
  - I added unit tests for some pure functions, but I would have liked to have setup cypress to run some integration tests, especially to cover errors and loading states.
-
+- I was slightly confused byt this wording in the brief `Modal implementation: The modal should remain open at all times and should not close when clicking outside or on a button within the modal`. I have created a state to toggle the Modal open or closed, but I haven't utilised the `seIsOpen(false)` function.

@@ -57,86 +57,81 @@ export default function PetitionUpdateForm({ onClose, title }: { onClose: () => 
     }
 
     return (
-        isSuccess ? (
-            <div className={styles.success} role="status">
-                <h2>Update Published!</h2>
-                <p>Your petition update has been successfully published.</p>
-                <button onClick={onClose}>Close</button>
-            </div>
-        ) : (
-            <>
-                <header className={styles.header}>
-                    <h2 id="update-petition-title">{title}</h2>
-                    <button className={styles.closeButton} onClick={onClose} aria-label="Close modal">
-                        &times;
-                    </button>
-                </header>
-                <form noValidate className={styles.form} onSubmit={handleSubmit}>
 
-                    <Input
-                        id="title"
-                        name="title"
-                        label="Titel"
-                        value={formData.title}
-                        onChange={handleInputChange}
-                        required
-                        error={errors.title}
-                        charCount={formData.title.length}
-                        charLimit={100}
-                    />
+        <>
+            <header className={styles.header}>
+                <h2 id="update-petition-title">{title}</h2>
+                <button className={styles.closeButton} onClick={onClose} aria-label="Close modal">
+                    &times;
+                </button>
+            </header>
+            <form noValidate className={styles.form} onSubmit={handleSubmit}>
 
-                    <Input
-                        as="textarea"
-                        id="newUpdate"
-                        name="newUpdate"
-                        label="Deine Neuigkeiten"
-                        placeholder="Bitte schreibe ein paar Worte zu deinem Update."
-                        value={formData.newUpdate}
-                        onChange={handleInputChange}
-                        required
-                        error={errors.newUpdate}
-                        charCount={formData.newUpdate.length}
-                        charLimit={10000}
-                    />
+                <Input
+                    id="title"
+                    name="title"
+                    label="Titel"
+                    value={formData.title}
+                    onChange={handleInputChange}
+                    required
+                    error={errors.title}
+                    charCount={formData.title.length}
+                    charLimit={100}
+                />
 
-                    <div className={styles.authorSection}>
-                        <h3>Absender</h3>
-                        <span className={styles.authorEdit}>
-                            <input
-                                type="checkbox"
-                                id="author-edit"
-                                checked={isAuthorEditable}
-                                onChange={(e) => setIsAuthorEditable(e.target.checked)}
-                            />
-                            <label htmlFor="author-edit">Edit author</label>
-                        </span>
-                        <Input
-                            id="author"
-                            name="author"
-                            label="Absender"
-                            value={formData.author}
-                            onChange={handleInputChange}
-                            readOnly={!isAuthorEditable}
-                            required
-                            error={errors.author}
+                <Input
+                    as="textarea"
+                    id="newUpdate"
+                    name="newUpdate"
+                    label="Deine Neuigkeiten"
+                    placeholder="Bitte schreibe ein paar Worte zu deinem Update."
+                    value={formData.newUpdate}
+                    onChange={handleInputChange}
+                    required
+                    error={errors.newUpdate}
+                    charCount={formData.newUpdate.length}
+                    charLimit={10000}
+                />
+
+                <div className={styles.authorSection}>
+                    <h3>Absender</h3>
+                    <span className={styles.authorEdit}>
+                        <input
+                            type="checkbox"
+                            id="author-edit"
+                            checked={isAuthorEditable}
+                            onChange={(e) => setIsAuthorEditable(e.target.checked)}
                         />
-                    </div>
-
-                    <span className={styles.actionButtons}>
-
-                        <button type="button" className={styles.cancelButton} onClick={onClose}>
-                            Abbrechnung
-                        </button>
-                        <button type="button" className={styles.saveButton} onClick={handleSaveData}>
-                            Save Data
-                        </button>
-                        <button type="submit" className={styles.publishButton} disabled={isLoading}>
-                            {isLoading ? "Publishing..." : "Publish Update"}
-                        </button>
+                        <label htmlFor="author-edit">Edit author</label>
                     </span>
-                    {serverError && <p className={styles.errorMessage}>An error occurred while publishing the update. Please try again.</p>}
-                </form >
-            </>
-        )
+                    <Input
+                        id="author"
+                        name="author"
+                        label="Absender"
+                        value={formData.author}
+                        onChange={handleInputChange}
+                        readOnly={!isAuthorEditable}
+                        required
+                        error={errors.author}
+                    />
+                </div>
+
+                <span className={styles.actionButtons}>
+
+                    <button type="button" className={styles.cancelButton} onClick={onClose}>
+                        Abbrechnung
+                    </button>
+                    <button type="button" className={styles.saveButton} onClick={handleSaveData}>
+                        Save Data
+                    </button>
+                    <button type="submit" className={styles.publishButton} disabled={isLoading}>
+                        {isLoading ? "Publishing..." : "Publish Update"}
+                    </button>
+                </span>
+                {isSuccess && <p className={styles.successMessage}>Update published successfully!</p>}
+                {serverError && <p className={styles.errorMessage}>An error occurred while publishing the update. Please try again.</p>}
+            </form >
+        </>
+
     );
 }

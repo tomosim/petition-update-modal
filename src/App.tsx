@@ -12,7 +12,7 @@ function App() {
       <button className={styles.toggleModal} onClick={() => setIsModalOpen(true)}>
         Update Petition
       </button>
-      {isModalOpen && <Modal ariaLabel="Update Petition" ariaLabelledBy="update-petition-title" children={<PetitionUpdateForm title="Neues Update erstellen" onClose={() => setIsModalOpen(false)} />} />}
+      {isModalOpen && <Modal ariaLabel="Update Petition" ariaLabelledBy="update-petition-title" children={<PetitionUpdateForm title="Neues Update erstellen" onClose={() => console.log("Close button clicked")} />} />}
     </main>
   )
 }
