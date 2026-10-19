@@ -9,7 +9,7 @@ const UpdatePetitionSchema = z.object({
 })
 export type UpdatePetitionInput = z.infer<typeof UpdatePetitionSchema>;
 
-export default function PetitionUpdateForm({ onClose }: { onClose: () => void }) {
+export default function PetitionUpdateForm({ onClose, title }: { onClose: () => void; title: string }) {
     const [formData, setFormData] = useState<UpdatePetitionInput>({
         title: '',
         newUpdate: '',
@@ -80,34 +80,42 @@ export default function PetitionUpdateForm({ onClose }: { onClose: () => void })
                 <button onClick={onClose}>Close</button>
             </div>
         ) : (
-            <form style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: 16 }} onSubmit={handleSubmit}>
-                <label htmlFor="title">Title</label>
-                <input id="title" name="title" type="text" value={formData.title} onChange={handleInputChange} />
-                {errors.title && <p style={{ color: 'red' }}>{errors.title}</p>}
+            <>
+                <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 16 }}>
+                    <h2 id="update-petition-title">{title}</h2>
+                    <button onClick={onClose} aria-label="Close modal" style={{ border: 'none', background: 'none', fontSize: '24px', cursor: 'pointer' }}>
+                        &times;
+                    </button>
+                </header>
+                <form style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: 16 }} onSubmit={handleSubmit}>
+                    <label htmlFor="title">Title</label>
+                    <input id="title" name="title" type="text" value={formData.title} onChange={handleInputChange} />
+                    {errors.title && <p style={{ color: 'red' }}>{errors.title}</p>}
 
-                <label htmlFor="newUpdate">New update</label>
-                <textarea id="newUpdate" name="newUpdate" value={formData.newUpdate} onChange={handleInputChange} />
-                {errors.newUpdate && <p style={{ color: 'red' }}>{errors.newUpdate}</p>}
+                    <label htmlFor="newUpdate">New update</label>
+                    <textarea id="newUpdate" name="newUpdate" value={formData.newUpdate} onChange={handleInputChange} />
+                    {errors.newUpdate && <p style={{ color: 'red' }}>{errors.newUpdate}</p>}
 
-                <label htmlFor="author-edit">Edit author</label>
-                <input
-                    type="checkbox"
-                    id="author-edit"
-                    checked={isAuthorEditable}
-                    onChange={(e) => setIsAuthorEditable(e.target.checked)}
-                />
+                    <label htmlFor="author-edit">Edit author</label>
+                    <input
+                        type="checkbox"
+                        id="author-edit"
+                        checked={isAuthorEditable}
+                        onChange={(e) => setIsAuthorEditable(e.target.checked)}
+                    />
 
-                <label htmlFor="author">Author</label>
-                <input id="author" name="author" type="text" value={formData.author} onChange={handleInputChange} readOnly={!isAuthorEditable} />
-                {errors.author && <p style={{ color: 'red' }}>{errors.author}</p>}
+                    <label htmlFor="author">Author</label>
+                    <input id="author" name="author" type="text" value={formData.author} onChange={handleInputChange} readOnly={!isAuthorEditable} />
+                    {errors.author && <p style={{ color: 'red' }}>{errors.author}</p>}
 
-                <button onClick={onClose}>Cancel</button>
-                <button type="button" onClick={handleSaveData}>Save Data</button>
-                <button type="submit" disabled={isLoading}>
-                    {isLoading ? "Publishing..." : "Publish Update"}
-                </button>
-                {isError && <p style={{ color: 'red' }}>An error occurred while publishing the update. Please try again.</p>}
-            </form>
+                    <button onClick={onClose}>Cancel</button>
+                    <button type="button" onClick={handleSaveData}>Save Data</button>
+                    <button type="submit" disabled={isLoading}>
+                        {isLoading ? "Publishing..." : "Publish Update"}
+                    </button>
+                    {isError && <p style={{ color: 'red' }}>An error occurred while publishing the update. Please try again.</p>}
+                </form>
+            </>
         )
     );
 }

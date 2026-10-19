@@ -1,0 +1,14 @@
+.modal {
+    width: min(670px, calc(100% - 32px));
+    max-height: 90vh;
+    padding: 0;
+    overflow-y: auto;
+    border: 0;
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 8px 32px rgb(0 0 0 / 20%);
+}
+
+.modal::backdrop {
+    background: rgb(0 0 0 / 50%);
+}
