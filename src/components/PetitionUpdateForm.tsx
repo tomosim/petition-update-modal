@@ -3,19 +3,16 @@ import { mockUpdatePetition } from "../api/mocks";
 import Input from "./Input";
 import styles from "./PetitionUpdateForm.module.css";
 import { validateForm, type UpdatePetitionInput } from "./PetitionUpdateValidation";
+import { loadSavedForm } from "./storage";
 
 export type { UpdatePetitionInput } from "./PetitionUpdateValidation";
 
 export default function PetitionUpdateForm({ onClose, title }: { onClose: () => void; title: string }) {
-    const [formData, setFormData] = useState<UpdatePetitionInput>({
-        title: '',
-        newUpdate: '',
-        author: 'Petra Petitionstarterin',
-    });
+    const [formData, setFormData] = useState<UpdatePetitionInput>(loadSavedForm);
     const [isAuthorEditable, setIsAuthorEditable] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
-    const [isError, setIsError] = useState(false);
+    const [serverError, setServerError] = useState("");
     const [errors, setErrors] = useState<{ [key in "title" | "newUpdate" | "author"]: string }>({ title: "", newUpdate: "", author: "" });
 
     useEffect(() => {
@@ -25,16 +22,8 @@ export default function PetitionUpdateForm({ onClose, title }: { onClose: () => 
         }
     }, [errors]);
 
-    useEffect(() => {
-        const savedData = localStorage.getItem("formData");
-        if (savedData) {
-            setFormData(JSON.parse(savedData));
-        }
-
-    }, []);
-
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setIsError(false); // Reset error state on input change
+        setServerError(""); // Reset error state on input change
         const { name, value } = e.target;
         setFormData((prevData) => ({
             ...prevData,
@@ -145,7 +134,7 @@ export default function PetitionUpdateForm({ onClose, title }: { onClose: () => 
                             {isLoading ? "Publishing..." : "Publish Update"}
                         </button>
                     </span>
-                    {isError && <p className={styles.errorMessage}>An error occurred while publishing the update. Please try again.</p>}
+                    {serverError && <p className={styles.errorMessage}>An error occurred while publishing the update. Please try again.</p>}
                 </form >
             </>
         )
