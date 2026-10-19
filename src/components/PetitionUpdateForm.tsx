@@ -1,20 +1,24 @@
 import React, { useEffect } from "react";
 import { z } from "zod";
+import { mockUpdatePetition } from "../api/mocks";
+
+const UpdatePetitionSchema = z.object({
+    title: z.string().nonempty("Title is required").max(100, "Title must be at most 100 characters"),
+    newUpdate: z.string().nonempty("Please write a few words about your update.").max(10000, "Update must be at most 10,000 characters"),
+    author: z.string().nonempty("Author is required")
+})
+export type UpdatePetitionInput = z.infer<typeof UpdatePetitionSchema>;
 
 export default function PetitionUpdateForm({ onClose }: { onClose: () => void }) {
-    const UpdatePetitionSchema = z.object({
-        title: z.string().nonempty("Title is required").max(100, "Title must be at most 100 characters"),
-        newUpdate: z.string().nonempty("Please write a few words about your update.").max(10000, "Update must be at most 10,000 characters"),
-        author: z.string().nonempty("Author is required")
-    })
-    type UpdatePetitionInput = z.infer<typeof UpdatePetitionSchema>;
-
     const [formData, setFormData] = React.useState<UpdatePetitionInput>({
         title: '',
         newUpdate: '',
         author: 'Petra Petitionstarterin',
     });
     const [isAuthorEditable, setIsAuthorEditable] = React.useState(false);
+    const [isLoading, setIsLoading] = React.useState(false);
+    const [isSuccess, setIsSuccess] = React.useState(false);
+    const [isError, setIsError] = React.useState(false);
 
     useEffect(() => {
         const savedData = localStorage.getItem("formData");
@@ -25,6 +29,7 @@ export default function PetitionUpdateForm({ onClose }: { onClose: () => void })
     }, []);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setIsError(false); // Reset error state on input change
         const { name, value } = e.target;
         setFormData((prevData) => ({
             ...prevData,
@@ -32,14 +37,22 @@ export default function PetitionUpdateForm({ onClose }: { onClose: () => void })
         }));
     };
 
-    const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
         const result = UpdatePetitionSchema.safeParse(formData);
         if (!result.success) {
             console.error(result.error.format());
             return;
         }
-        console.log("Form submitted successfully:", result.data);
+        try {
+            setIsLoading(true);
+            await mockUpdatePetition(formData);
+            setIsSuccess(true);
+        } catch (error) {
+            setIsError(true);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const handleSaveData = () => {
@@ -47,27 +60,38 @@ export default function PetitionUpdateForm({ onClose }: { onClose: () => void })
     }
 
     return (
-        <form style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: 16 }} onSubmit={handleSubmit}>
-            <label htmlFor="title">Title</label>
-            <input id="title" name="title" type="text" value={formData.title} onChange={handleInputChange} />
+        isSuccess ? (
+            <div style={{ padding: 16 }}>
+                <h2>Update Published!</h2>
+                <p>Your petition update has been successfully published.</p>
+                <button onClick={onClose}>Close</button>
+            </div>
+        ) : (
+            <form style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: 16 }} onSubmit={handleSubmit}>
+                <label htmlFor="title">Title</label>
+                <input id="title" name="title" type="text" value={formData.title} onChange={handleInputChange} />
 
-            <label htmlFor="new-update">New update</label>
-            <textarea id="new-update" name="newUpdate" value={formData.newUpdate} onChange={handleInputChange} />
+                <label htmlFor="new-update">New update</label>
+                <textarea id="new-update" name="newUpdate" value={formData.newUpdate} onChange={handleInputChange} />
 
-            <label htmlFor="author-edit">Edit author</label>
-            <input
-                type="checkbox"
-                id="author-edit"
-                checked={isAuthorEditable}
-                onChange={(e) => setIsAuthorEditable(e.target.checked)}
-            />
+                <label htmlFor="author-edit">Edit author</label>
+                <input
+                    type="checkbox"
+                    id="author-edit"
+                    checked={isAuthorEditable}
+                    onChange={(e) => setIsAuthorEditable(e.target.checked)}
+                />
 
-            <label htmlFor="author">Author</label>
-            <input id="author" name="author" type="text" value={formData.author} onChange={handleInputChange} readOnly={!isAuthorEditable} />
+                <label htmlFor="author">Author</label>
+                <input id="author" name="author" type="text" value={formData.author} onChange={handleInputChange} readOnly={!isAuthorEditable} />
 
-            <button onClick={onClose}>Cancel</button>
-            <button type="button" onClick={handleSaveData}>Save Data</button>
-            <button type="submit" >Publish Update</button>
-        </form>
+                <button onClick={onClose}>Cancel</button>
+                <button type="button" onClick={handleSaveData}>Save Data</button>
+                <button type="submit" disabled={isLoading}>
+                    {isLoading ? "Publishing..." : "Publish Update"}
+                </button>
+                {isError && <p style={{ color: 'red' }}>An error occurred while publishing the update. Please try again.</p>}
+            </form>
+        )
     );
 }
