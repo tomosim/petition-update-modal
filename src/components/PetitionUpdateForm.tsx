@@ -34,7 +34,11 @@ export default function PetitionUpdateForm({ onClose, title }: { onClose: () => 
     const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formErrors = validateForm(formData);
-        setErrors(formErrors);
+        if (Object.values(formErrors).some((error) => error)) {
+            setErrors(formErrors);
+            return;
+        }
+
 
         try {
             setIsLoading(true);
@@ -53,6 +57,11 @@ export default function PetitionUpdateForm({ onClose, title }: { onClose: () => 
     };
 
     const handleSaveData = () => {
+        const formErrors = validateForm(formData);
+        if (Object.values(formErrors).some((error) => error)) {
+            setErrors(formErrors);
+            return;
+        }
         localStorage.setItem("formData", JSON.stringify(formData));
     }
 
