@@ -9,7 +9,6 @@ type CommonProps = {
     label: string;
     error?: string;
     className?: string;
-    wrapperClassName?: string;
     labelClassName?: string;
     errorClassName?: string;
     'aria-describedby'?: string;
@@ -33,7 +32,6 @@ export default function Input(props: InputProps) {
         label,
         error,
         className,
-        wrapperClassName,
         labelClassName,
         errorClassName,
         'aria-describedby': describedBy,
@@ -47,10 +45,9 @@ export default function Input(props: InputProps) {
         .filter(Boolean)
         .join(' ') || undefined;
     const charLimitExceeded = charLimit !== undefined && charCount !== undefined && charCount > charLimit;
-    const wrapperClasses = [styles.wrapper, wrapperClassName].filter(Boolean).join(' ');
 
     return (
-        <div className={wrapperClasses}>
+        <div className={styles.wrapper}>
             <label htmlFor={id} className={labelClassName}>
                 {label}
             </label>
